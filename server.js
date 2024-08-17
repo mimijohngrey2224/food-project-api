@@ -19,7 +19,7 @@ dotenv.config();
 connectDB()
 const app = express()
 app.use(cors({
-    origin: process.env.FRONTEND_URL,
+    origin:" https://food-project-lac.vercel.app",
     allowedHeaders: ["Content-Type", "Authorization", "token"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true
