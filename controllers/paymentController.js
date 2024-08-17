@@ -4,7 +4,7 @@ const orderModel = require("../models/order");
 const fetch = require("node-fetch");
 
 const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
-const frontend_URI = "http://localhost:5173";
+const frontend_URI = "https://food-project-lac.vercel.app";
 
 exports.initiatePayment = async (req, res) => {
   const { user } = req;

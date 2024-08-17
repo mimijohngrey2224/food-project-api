@@ -1,24 +1,3 @@
-// const jwt = require("jsonwebtoken");
-
-// const authMiddleware = async (req, res, next) => {
-//   const token = req.headers.authorization; // Assuming token is passed as "Bearer <token>"
-//   if (!token) {
-//     return res.status(401).json({ success: false, message: "Unauthorized, Please Login Again" });
-//   }
-
-//   try {
-//     const tokenDecode = jwt.verify(token.split(" ")[1], process.env.JWT_SECRET); // Splitting token to get actual token part
-//     req.user = { id: tokenDecode.id }; // Assuming your token has user ID in 'id' field
-//     next();
-//   } catch (error) {
-//     console.error("Token verification failed:", error);
-//     return res.status(401).json({ success: false, message: "Token verification failed" });
-//   }
-// };
-
-// module.exports = authMiddleware;
-
-
 const jwt = require('jsonwebtoken');
 // const userModel = require('../models/user'); // Adjust the path as necessar
 
