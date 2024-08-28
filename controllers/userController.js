@@ -9,7 +9,7 @@ const { v4: uuidv4 } = require("uuid");
 
 
 const registerUser = async (req, res) => {
-    const { firstName, lastName, email, password, confirmPassword, street, city, country, state } = req.body;
+    const { firstName, lastName, email, password, street, city, country, state } = req.body;
     const address = { street, city, country, state };
 
     try {
@@ -36,7 +36,6 @@ const registerUser = async (req, res) => {
             email,
             address,
             password: hashedPassword,
-            confirmPassword,
             verificationToken,
             isVerified: false
         });
