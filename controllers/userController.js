@@ -12,6 +12,9 @@ const registerUser = async (req, res) => {
     const { firstName, lastName, email, password, street, city, country, state } = req.body;
     const address = { street, city, country, state };
 
+    console.log(`Received password: ${password}`);
+    console.log(`Password length: ${password.length}`);
+
     try {
         const exists = await userModel.findOne({ email });
         if (exists) {
