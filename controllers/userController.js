@@ -31,7 +31,7 @@ const registerUser = async (req, res) => {
         const salt = await bcrypt.genSalt(10);
         const hashedPassword = await bcrypt.hash(password, salt);
 
-        const verificationToken = uuidv4();
+        // const verificationToken = uuidv4();
 
         const newUser = new userModel({
             firstName,
@@ -39,8 +39,8 @@ const registerUser = async (req, res) => {
             email,
             address,
             password: hashedPassword,
-            verificationToken,
-            isVerified: false
+            // verificationToken,
+            isVerified: true
         });
 
         const user = await newUser.save();
@@ -48,15 +48,15 @@ const registerUser = async (req, res) => {
         const token = createToken(user._id);
 
 
-        const verificationUrl = `${process.env.FRONTEND_URL}/api/email/verify/${verificationToken}`;
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Email Verification',
-            text: `Please verify your email by clicking the link: ${verificationUrl}`
-        };
+        // const verificationUrl = `${process.env.FRONTEND_URL}/api/email/verify/${verificationToken}`;
+        // const mailOptions = {
+        //     from: process.env.EMAIL_USER,
+        //     to: email,
+        //     subject: 'Email Verification',
+        //     text: `Please verify your email by clicking the link: ${verificationUrl}`
+        // };
 
-        await transporter.sendMail(mailOptions);
+        // await transporter.sendMail(mailOptions);
 
 
         res.json({ success: true, token });
