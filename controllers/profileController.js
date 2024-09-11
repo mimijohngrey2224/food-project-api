@@ -4,13 +4,17 @@ const userModel = require('../models/user');
 
 const getProfile = async (req, res) => {
     try {
-        const user = req.user;                                        // to get the user from the request
+        const user = req.user;
         const userDetails = await userModel.findById(user._id);
+
+        if (!userDetails) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
         let profile = await profileModel.findOne({ userId: user._id });
-        
+
         if (!profile) {
-            
-            profile = new profileModel({                   //this logic is for If no profile exists,then it should create one idea from  gbemi
+            profile = new profileModel({
                 userId: user._id,
                 firstName: userDetails.name,
                 email: userDetails.email,
@@ -18,14 +22,13 @@ const getProfile = async (req, res) => {
             });
             await profile.save();
         }
-        console.log("Sending profile:", profile); 
-        res.json({ 
-            success: true, 
+        res.json({
+            success: true,
             profile: {
                 ...profile.toObject(),
-                image: profile.image // to ensure image is included
-            }, 
-            userDetails 
+                image: profile.image
+            },
+            userDetails
         });
     } catch (error) {
         console.error(error);
@@ -35,12 +38,11 @@ const getProfile = async (req, res) => {
 
 
 const updateProfile = async (req, res) => {
-    console.log('Request file:', req.file);
     try {
-        const user = req.user; 
+        const user = req.user;
         const { firstName, lastName, phone, address } = req.body;
 
-        let image = req.file ? req.file.filename : null; // Handle the case where req.file might be undefined
+        let image = req.file ? req.file.filename : null;
 
         let profile = await profileModel.findOne({ userId: user._id });
 
@@ -49,7 +51,9 @@ const updateProfile = async (req, res) => {
             profile.lastName = lastName || profile.lastName;
             profile.phone = phone || profile.phone;
             profile.address = address || profile.address;
-            profile.image = image || profile.image;
+            if (image) {
+                profile.image = image;
+            }
             await profile.save();
         } else {
             profile = new profileModel({
