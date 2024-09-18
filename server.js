@@ -9,7 +9,7 @@ const authMiddleware = require("./middleware/authMiddleware")
 const orderRouter = require("./routes/orderRoute")
 const paymentRouter = require("./routes/paymentRoute")
 const profileRouter = require('./routes/profileRoute')
-const cors = require("cors")
+const cors = require("cors");
 const emailRouter = require("./routes/emailRoute");
 
 
