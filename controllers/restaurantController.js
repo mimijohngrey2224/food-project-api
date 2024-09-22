@@ -43,7 +43,7 @@ const addRestaurant = async (req, res) => {
 
 const removeRestaurant = async (req, res)=> {
         try {
-            const restaurant = await restaurantModel.findById(req.body.id)
+            const restaurant = await restaurantModel.findById(req.body.id);
             fs.unlink(uploads/`${restaurant.image}`, ()=> {})
 
             await restaurantModel.findByIdAndDelete(req.body.id);
