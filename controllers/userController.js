@@ -1,4 +1,4 @@
-const userModel = require("../models/user")
+const userModel = require("../models/user");
 const jwt = require("jsonwebtoken")
 const bcrypt = require("bcrypt")
 const validator = require("validator");
@@ -9,11 +9,17 @@ const { v4: uuidv4 } = require("uuid");
 
 
 const registerUser = async (req, res) => {
+    // const { firstName, lastName, email, password, address, confirmPassword } = req.body;
     const { firstName, lastName, email, password, street, city, country, state } = req.body;
     const address = { street, city, country, state };
 
     console.log(`Received password: ${password}`);
+    // console.log(`Received confirmPassword: ${confirmPassword}`);
     console.log(`Password length: ${password.length}`);
+
+    // if(password !== confirmPassword){
+    //     return res.status(400).json({ message: "Invalid Password or mismatched password"})
+    // }
 
     try {
         const exists = await userModel.findOne({ email });
@@ -32,7 +38,7 @@ const registerUser = async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, salt);
 
         const verificationToken = uuidv4();
-
+        // firstName, lastName, email, password, street, city, country, state 
         const newUser = new userModel({
             firstName,
             lastName,
@@ -41,22 +47,36 @@ const registerUser = async (req, res) => {
             password: hashedPassword,
             verificationToken,
             isVerified: true
+            // isVerified: false
         });
+
+
 
         const user = await newUser.save();
     
         const token = createToken(user._id);
+        console.log(token);
+        
 
 
-        const verificationUrl = `${process.env.FRONTEND_URL}/api/email/verify/${verificationToken}`;
-        const mailOptions = {
-            from: process.env.EMAIL_USER,
-            to: email,
-            subject: 'Email Verification',
-            text: `Please verify your email by clicking the link: ${verificationUrl}`
-        };
-
-        await transporter.sendMail(mailOptions);
+        const verificationUrl = `${process.env.FRONTEND_URL}/api/email/verify/?token=${token}`;
+        console.log( "verify url", verificationUrl)
+        console.log( "verify uuid", verificationToken)
+        console.log( "verify token", token)
+        try {
+            
+            const mailOptions = {
+                from: process.env.EMAIL_USER,
+                to: user.email,
+                subject: 'Email Verification',
+                text: `Please verify your email by clicking the link: ${verificationUrl}`
+            };
+            // console.log(mailOptions)
+            await transporter.sendMail(mailOptions);
+            console.log("Email sent successfully!..")
+        } catch (error) {
+            console.log("Could not send verification email")
+        }
 
 
         res.json({ success: true, token });

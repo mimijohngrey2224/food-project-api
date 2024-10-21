@@ -1,8 +1,5 @@
 const userModel = require("../models/user");
 
-
-
-
  const verifyEmail = async (req, res) => {
     const { token } = req.params;
 

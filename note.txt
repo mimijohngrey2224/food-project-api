@@ -1,0 +1,11 @@
+{
+  "firstName": "sam",
+  "lastName": "hope",
+  "email": "sam@test.com",
+  "password": "123456789",
+  "confirmPassword": "123456789",
+  "phone": "08038901148",
+  "address": "ojudo",
+  ""
+  
+}
