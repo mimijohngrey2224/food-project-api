@@ -6,7 +6,7 @@ const emailRouter = express.Router();
 
 
 
-emailRouter.get('/verify/:token',verifyEmail);
+emailRouter.get('/verify/:token', verifyEmail);
 
 
 module.exports = emailRouter;
