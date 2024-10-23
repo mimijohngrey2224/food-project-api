@@ -16,25 +16,14 @@ const emailRouter = require("./routes/emailRoute");
 
 dotenv.config();
 
-// connectDB()
-// const app = express()
-// app.use(cors({
-//     // origin:"http://localhost:5173",
-//     origin:"https://food-project-lac.vercel.app",
-//     allowedHeaders: ["Content-Type", "Authorization", "token"],
-//     methods: ["GET", "POST", "PATCH", "DELETE"],
-//     credentials: true
-// }))
-
-
-const corsOptions = {
-    origin: process.env.FRONTEND_URL, // Set this in your .env
+connectDB()
+const app = express()
+app.use(cors({
+    origin:"https://food-project-lac.vercel.app",
     allowedHeaders: ["Content-Type", "Authorization", "token"],
     methods: ["GET", "POST", "PATCH", "DELETE"],
     credentials: true
-};
-
-app.use(cors(corsOptions));
+}))
 
 
 app.use(express.json())
