@@ -54,7 +54,7 @@ const registerUser = async (req, res) => {
 
         const user = await newUser.save();
     
-        const token = createToken(user._id);
+        const token = await createToken(user._id);
         console.log(token);
         
 
@@ -79,7 +79,7 @@ const registerUser = async (req, res) => {
         }
 
 
-        res.json({ success: true, token });
+        res.json({ success: true, token, user });
 
     } catch (error) {
         console.error('Registration error:', error);
@@ -107,7 +107,7 @@ const loginUser = async (req, res) => {
         }
 
         // Create a token
-        const token = createToken(user._id);
+        const token = await createToken(user._id);
         
         // Respond with success and user data
         res.json({
@@ -128,8 +128,18 @@ const loginUser = async (req, res) => {
 };
 
 
-const createToken = (id) => {
-    return jwt.sign({id}, process.env.JWT_SECRET)
-}
+const createToken = async (id) => {
+    // Fetch the user by ID
+    const user = await userModel.findById(id);
+    
+    // Check if the user was found
+    if (!user) {
+        throw new Error("User not found"); // Handle the case where the user doesn't exist
+    }
+
+    // Create and return the token
+    const token = jwt.sign({ _id: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+    return token;
+};
 
 module.exports = { registerUser, loginUser }

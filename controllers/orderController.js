@@ -43,6 +43,7 @@ const userOrders = async (req, res) => {
         const userId = req.body.userId;
         console.log("Fetching orders for user ID", req.body.userId);
         const orders = await orderModel.find({userId})
+        console.log(orders)
         res.json({success: true, data: orders})
     } catch (error) {
         console.log(error);

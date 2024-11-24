@@ -30,10 +30,10 @@ const userSchema = new mongoose.Schema({
     },
     verificationToken: {type: String},
     isVerified: {type: Boolean, default: false},
-    cartData: {
-        type: Array,
-        default: []
-    },
+    // cartData: {
+    //     type: Array,
+    //     default: []
+    // },
 }, { minimize: false });
 
 
@@ -44,6 +44,6 @@ const userSchema = new mongoose.Schema({
 //     return token;
 // }
 
-const userModel = mongoose.model('user', userSchema);
+const userModel = mongoose.model('User', userSchema);
 
 module.exports = userModel;

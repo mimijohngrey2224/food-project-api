@@ -7,6 +7,7 @@ const orderRouter = express.Router();
 
 orderRouter.post("/place-order", authMiddleware, placeOrder )
 orderRouter.post("/user-order", authMiddleware, userOrders )
+orderRouter.get("/user-order", authMiddleware, userOrders )
 
 
 module.exports = orderRouter;

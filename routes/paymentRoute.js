@@ -4,7 +4,7 @@ const { initiatePayment, verifyPayment } = require("../controllers/paymentContro
 
 const paymentRouter = express.Router();
 
-paymentRouter.post("/initiate", authMiddleware, initiatePayment)
-paymentRouter.get("/verify", authMiddleware, verifyPayment)
+paymentRouter.post("/initiate", authMiddleware, initiatePayment);
+paymentRouter.post("/api/verify", authMiddleware, verifyPayment);
 
 module.exports = paymentRouter

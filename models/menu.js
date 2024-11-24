@@ -29,6 +29,6 @@ const menuSchema = new mongoose.Schema({
     signature: {type: Boolean, default: false},
 })
 
-const menuModel = mongoose.model.menu || mongoose.model("menu", menuSchema)
+const menuModel = mongoose.model("Menu", menuSchema)
 
 module.exports = menuModel;
