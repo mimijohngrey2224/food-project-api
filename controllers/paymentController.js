@@ -3,9 +3,11 @@ const userModel = require("../models/user");
 const orderModel = require("../models/order");
 const Cart = require("../models/cart")
 const fetch = require("node-fetch");
+const cart = require("../models/cart");
 
 const FLW_SECRET_KEY = process.env.FLW_SECRET_KEY;
-const frontend_URI = "https://food-project-lac.vercel.app";
+const frontend_URI = "http://localhost:5173";
+// const frontend_URI = "https://food-project-lac.vercel.app";
 
 exports.initiatePayment = async (req, res) => {
   const { user } = req;
@@ -71,11 +73,63 @@ exports.initiatePayment = async (req, res) => {
 };
 
 
+// exports.verifyPayment = async (req, res) => {
+//   const { userId } = req;
+//   const { transaction_id, orderId } = req.body;
+  
+//   console.log(userId)
+//   try {
+//     const response = await fetch(
+//       `https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`,
+//       {
+//         method: "GET",
+//         headers: {
+//           Authorization: `Bearer ${FLW_SECRET_KEY}`,
+//         },
+//       }
+//     );
+
+//     const data = await response.json();
+//     if (data.status === "success") {
+//       const cart = await orderModel.findOne({ userId: req.user.id }).populate("menus.menu", "user");
+//       console.log(cart)
+
+
+//       const order = new orderModel({
+//         user: req.user.id,
+//         orderId,
+//         firstName: data.data.meta.firstName,
+//         lastName: data.data.meta.lastName,
+//         phone: data.data.meta.phone,
+//         address: data.data.meta.address,
+//         menus: cart.menus,
+//         amount: data.data.amount,
+//         status: "completed",
+//         transactionId: transaction_id,
+//       });
+
+//       await order.save();
+//       console.log("order",order)
+//       // await userModel.findByIdAndUpdate(req.user.id, { cartData: {} });
+//       await Cart.findOneAndDelete({ user: req.user.id });
+
+//       console.log(order)
+//       return res.json({ msg: "Payment Successful", order });
+//     } else {
+//       return res.json({ error: "Payment verification failed" });
+//     }
+//   } catch (error) {
+//     console.error("Error verifying payment:", error);
+//     res.status(500).json({ error: "Server error" });
+//   }
+// };
+
+
 exports.verifyPayment = async (req, res) => {
   const { userId } = req;
   const { transaction_id, orderId } = req.body;
   
-  console.log(userId)
+  console.log(userId);
   try {
     const response = await fetch(
       `https://api.flutterwave.com/v3/transactions/${transaction_id}/verify`,
@@ -89,31 +143,40 @@ exports.verifyPayment = async (req, res) => {
 
     const data = await response.json();
     if (data.status === "success") {
-      const cart = await orderModel.findOne({ userId: req.user.id }).populate("products.product");
-      console.log(cart)
+      const cart = await Cart
+        .findOne({ user: req.user.id })
+        .populate("menus.menu")  // Populate the menu name and price, or any fields you need
+        .populate("user"); // Populate user details like name, email, phone
 
+      console.log("My user cart", cart);
 
       const order = new orderModel({
-        userId: req.user.id,
+        user: req.user.id,
         orderId,
         firstName: data.data.meta.firstName,
         lastName: data.data.meta.lastName,
         phone: data.data.meta.phone,
         address: data.data.meta.address,
-        products: cart.products,
+        menus: cart.menus,
         amount: data.data.amount,
         status: "completed",
         transactionId: transaction_id,
       });
 
-      await order.save();
-      // await userModel.findByIdAndUpdate(req.user.id, { cartData: {} });
+      console.log("Cart menu", cart.menus)
+
+      console.log("Order", order)
+
+      const neworder = await order.save();
+      console.log("order main", neworder);
+
+      // Remove the cart data after order completion
       await Cart.findOneAndDelete({ user: req.user.id });
 
-      res.json({ msg: "Payment Successful", order });
-      console.log(order)
+      console.log(neworder);
+      return res.json({ msg: "Payment Successful", order });
     } else {
-      res.json({ error: "Payment verification failed" });
+      return res.json({ error: "Payment verification failed" });
     }
   } catch (error) {
     console.error("Error verifying payment:", error);

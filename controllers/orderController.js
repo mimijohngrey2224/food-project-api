@@ -30,7 +30,7 @@ const placeOrder = async (req, res) =>{
         await newOrder.save();
 
         await userModel.findByIdAndUpdate(userId, { cartData: {} });
-        res.json({sucess: true, order: newOrder})
+        return res.json({sucess: true, order: newOrder})
 
     } catch (error) {
         console.error(error);

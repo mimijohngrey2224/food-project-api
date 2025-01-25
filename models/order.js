@@ -11,24 +11,31 @@ const addressSchema = new mongoose.Schema({
 
 
 const orderSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        require: true
-    },
+    // userId: {
+    //     type: String,
+    //     require: true
+    // },
+    user: {type: mongoose.Schema.Types.ObjectId, ref: "User", required: true},
+    orderId: {type: String, required: true},
     firstName: {type: String},
     lastName: {type: String},
     email: {type: String},
     phone: { type: String},
-    items: {
-        type: Array,
-        required: true
-    },
+    transactionId: {type: String, required: true},
+    // items: {
+    //     type: Array,
+    //     required: true
+    // },
+    menus: [{
+        menu: {type: mongoose.Schema.Types.ObjectId, ref: "Menu", required: true},
+        quantity: {type: Number, required: true}
+    }],
     amount: {
         type: Number,
         required: true
     },
     address: {
-        type: addressSchema
+        type: String,
     },
     status: {
         type: String,
@@ -38,7 +45,7 @@ const orderSchema = new mongoose.Schema({
         type: Date,
         default: Date.now()
     },
-    payment: {
+    paid: {
         type: Boolean,
         default: false
     }

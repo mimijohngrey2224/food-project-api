@@ -1,11 +1,12 @@
 const express = require('express')
-const { addToCart, updateQuantity, getCart, removeFromCart } = require('../controllers/cartController')
+const { addToCart, addToCarts, updateQuantity, getCart, removeFromCart } = require('../controllers/cartController')
 const authMiddleware = require("../middleware/authMiddleware")
 
 
 const cartRouter = express.Router();
 
-cartRouter.post('/api/add-to-cart', authMiddleware, addToCart);
+// cartRouter.post('/api/add-to-cart', authMiddleware, addToCart);
+cartRouter.post('/api/add-to-cart', authMiddleware, addToCarts);
 // cartRouter.post("/sync", authMiddleware, syncCartItems)
 cartRouter.get('/api/carts', authMiddleware, getCart);
 cartRouter.put('/api/update-cart', authMiddleware, updateQuantity);
