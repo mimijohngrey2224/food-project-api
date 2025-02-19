@@ -413,7 +413,7 @@ const addToCarts = async (req, res) => {
   };
   
   
-  // const updateQuantity = async (req, res) => {
+  // const updateQuantity = async (req, res) => { 
   //   const { productId, quantity } = req.body;
   //   try {
   //     const cart = await Cart.findOne({ user: req.user.id }).populate(

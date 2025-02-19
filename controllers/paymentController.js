@@ -11,14 +11,14 @@ const frontend_URI = "https://food-project-lac.vercel.app";
 
 exports.initiatePayment = async (req, res) => {
   const { user } = req;
-  const { amount, currency, firstName, lastName, phone, address, email, cart } = req.body;
+  const { amount, currency, firstName, lastName, phone, address, email } = req.body;
 
   console.log('Received payment initiation request:', req.body);
 
   // Check if cart data is empty
-  if (!cart || cart.length === 0) {
-    return res.json({ success: false, error: "Your cart is empty" });
-  }
+  // if (!cart || cart.length === 0) {
+  //   return res.json({ success: false, error: "Your cart is empty" });
+  // }
 
   try {
     const orderId = uuidv4();
@@ -28,6 +28,7 @@ exports.initiatePayment = async (req, res) => {
       tx_ref: orderId,
       amount,
       currency,
+      email,
       redirect_url: `${frontend_URI}/thanks`,
       customer: {
         email: email, // Ensure email is correctly assigned here
@@ -37,6 +38,7 @@ exports.initiatePayment = async (req, res) => {
         firstName,
         lastName,
         phone,
+        email,
         address,
       },
       customizations: {
@@ -61,10 +63,10 @@ exports.initiatePayment = async (req, res) => {
 
     if (data.status === "success") {
       console.log('Sending successful response to frontend:', { link: data.data.link, orderId });
-      res.json({ success: true, link: data.data.link, orderId });
+      res.json({ link: data.data.link, orderId });
     } else {
       console.log('Sending error response to frontend:', { error: data.message || "Failed to initiate payment" });
-      res.json({ success: false, error: data.message || "Failed to initiate payment" });
+      res.json({  error: data.message || "Failed to initiate payment" });
     }
   } catch (error) {
     console.error("Error initiating payment:", error);
@@ -142,6 +144,8 @@ exports.verifyPayment = async (req, res) => {
     );
 
     const data = await response.json();
+    console.log("data", data)
+    console.log("response", response)
     if (data.status === "success") {
       const cart = await Cart
         .findOne({ user: req.user.id })
